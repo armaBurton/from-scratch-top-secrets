@@ -37,7 +37,7 @@ describe('alchemy-app routes', () => {
     pool.end();
   });
 
-  it('creates a new user', async () => {
+  it('logs in a user', async () => {
     const res = await request(app)
       .post('/api/v1/users')
       .send(dummy);
@@ -70,6 +70,26 @@ describe('alchemy-app routes', () => {
     expect(logoutUser.body).toEqual({
       success: true,
       message: 'Signed out successfully!'
+    });
+  });
+
+  it('creates a new user', async () => {
+    const newUser = {
+      firstName: 'Yon',
+      lastName: 'Yonson',
+      email: 'julios@hair.huts',
+      password: 'cuts4cheap'
+    };
+
+    const res = await request(app)
+      .post('/api/v1/users/')
+      .send(newUser);
+
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      firstName: 'Yon',
+      lastName: 'Yonson',
+      email: 'julios@hair.huts'
     });
   });
 });
