@@ -61,8 +61,15 @@ describe('alchemy-app routes', () => {
       exp: expect.any(Number),
       iat: expect.any(Number)
     });
-
   });
 
-  it();
+  it('logs out a user', async () => {
+    const [agent, user] = await registerAndLogin();
+    const logoutUser = await agent.delete('/api/v1/users/sessions');
+
+    expect(logoutUser.body).toEqual({
+      success: true,
+      message: 'Signed out successfully!'
+    });
+  });
 });
