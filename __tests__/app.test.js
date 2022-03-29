@@ -3,7 +3,28 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 
-const ONE_DAY_IN_MS = 1000 * 60 * 60 * 24;
+const dummy = {
+  firstName: 'Donkey',
+  lastName: 'Kong',
+  email: 'bananas@forever.ape',
+  password: 'm0nk3yBus1n3ss'
+};
+
+const resgisterAndLogin = async (userProps = {}) =>{
+  const password = userProps.password ?? dummy.password;
+
+  //Create an "agent" that gives us the ability
+  //to store cookies between requests in a test
+  const agent = request.agent(app);
+
+  //create a user to sign in with
+  const user = await UserService.create({ ...dummy, ...userProps });
+
+  //then sign in
+  const { email } = user;
+  await agent.post('/api/v1/users/sessions').send({ email, password });
+  return [agent, user];
+};
 
 describe('alchemy-app routes', () => {
   beforeEach(() => {
@@ -15,6 +36,17 @@ describe('alchemy-app routes', () => {
   });
 
   it('creates a new user', async () => {
+    const res = await request(app)
+      .post('/api/v1/users')
+      .send(dummy);
 
+    const { firstName, lastName, email } = dummy;
+
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      firstName,
+      lastName,
+      email
+    });
   });
 });
