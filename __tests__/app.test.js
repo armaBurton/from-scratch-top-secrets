@@ -11,12 +11,13 @@ const dummy = {
   password: 'm0nk3yBus1n3ss'
 };
 
-const registerAndLogin = async (userProps = {}) =>{
+const registerAndLogin = async (userProps = {}) => {
   const password = userProps.password ?? dummy.password;
 
   //Create an "agent" that gives us the ability
   //to store cookies between requests in a test
   const agent = request.agent(app);
+
 
   //create a user to sign in with
   const user = await UserService.create({ ...dummy, ...userProps });
@@ -51,7 +52,7 @@ describe('alchemy-app routes', () => {
     });
   });
 
-  it.only('returns the current user', async () => {
+  it('returns the current user', async () => {
     const [agent, user] = await registerAndLogin();
     const me = await agent.get('/api/v1/users/me');
 
@@ -62,4 +63,6 @@ describe('alchemy-app routes', () => {
     });
 
   });
+
+  it();
 });
