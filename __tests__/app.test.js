@@ -122,12 +122,14 @@ describe('alchemy-app routes', () => {
 
     const secretsArr = [
       {
-        title: "Mr. Roboto",
-        description: "Secret secret, I`ve got a secret, under my skin."
+        title: 'Mr. Roboto',
+        description: 'Secret secret, I`ve got a secret, under my skin.',
+        createdAt: expect.any(String)
       },
       {
         title: 'Benjamin Franklin',
-        description: 'Three may keep a secret, if two of them are dead.'
+        description: 'Three may keep a secret, if two of them are dead.',
+        createdAt: expect.any(String)
       }
     ];
 
@@ -136,16 +138,4 @@ describe('alchemy-app routes', () => {
 
   });
 
-  
-  
-  // it.skip('returns the current user', async () => {
-  //   const [agent, user] = await registerAndLogin();
-  //   const me = await agent.get('/api/v1/users/me');
-  
-  //   expect(me.body).toEqual({
-  //     ...user, 
-  //     exp: expect.any(Number),
-  //     iat: expect.any(Number)
-  //   });
-  // });
 });
