@@ -18,7 +18,6 @@ const registerAndLogin = async (userProps = {}) => {
   //to store cookies between requests in a test
   const agent = request.agent(app);
 
-
   //create a user to sign in with
   const user = await UserService.create({ ...dummy, ...userProps });
 
@@ -39,7 +38,7 @@ describe('alchemy-app routes', () => {
 
   it('logs in a user', async () => {
     const res = await request(app)
-      .post('/api/v1/users')
+      .post('/api/v1/users/sessions')
       .send(dummy);
 
     const { firstName, lastName, email } = dummy;
@@ -52,15 +51,23 @@ describe('alchemy-app routes', () => {
     });
   });
 
-  it('returns the current user', async () => {
-    const [agent, user] = await registerAndLogin();
-    const me = await agent.get('/api/v1/users/me');
+  // it('returns the current user', async () => {
+  //   const [agent, user] = await registerAndLogin();
+  //   const me = await agent.get('/api/v1/users/me');
 
-    expect(me.body).toEqual({
-      ...user, 
-      exp: expect.any(Number),
-      iat: expect.any(Number)
-    });
+  //   expect(me.body).toEqual({
+  //     ...user, 
+  //     exp: expect.any(Number),
+  //     iat: expect.any(Number)
+  //   });
+  // });
+
+  it.only('returns a list of secrets', async () => {
+    const [agent, user] = await registerAndLogin();
+
+    let res = await agent.get('/api/v1/secrets');
+    
+
   });
 
   it('logs out a user', async () => {
@@ -92,4 +99,5 @@ describe('alchemy-app routes', () => {
       email: 'julios@hair.huts'
     });
   });
+
 });

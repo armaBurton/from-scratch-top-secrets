@@ -15,5 +15,10 @@ CREATE TABLE secrets (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
-  created_at CURRENT_TIMESTAMP GENERATED ALWAYS
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO secrets (title, description)
+VALUES
+('Mr. Roboto', 'Secret secret, I`ve got a secret, under my skin.'),
+('Benjamin Franklin', 'Three may keep a secret, if two of them are dead.');
