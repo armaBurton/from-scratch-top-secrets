@@ -77,24 +77,8 @@ describe('alchemy-app routes', () => {
       message: 'Signed out successfully!'
     });
   });
-
   
-  it.skip('returns a list of secrets', async () => {
-    // const res = 
-  });
-
-  it.skip('returns the current user', async () => {
-    const [agent, user] = await registerAndLogin();
-    const me = await agent.get('/api/v1/users/me');
-
-    expect(me.body).toEqual({
-      ...user, 
-      exp: expect.any(Number),
-      iat: expect.any(Number)
-    });
-  });
-
-  it.skip('creates a new user', async () => {
+  it('creates a new user', async () => {
     const newUser = {
       firstName: 'Yon',
       lastName: 'Yonson',
@@ -113,5 +97,21 @@ describe('alchemy-app routes', () => {
       email: 'julios@hair.huts'
     });
   });
+  
+  it.skip('returns a list of secrets', async () => {
+    // const res = 
+  });
+
+  it.skip('returns the current user', async () => {
+    const [agent, user] = await registerAndLogin();
+    const me = await agent.get('/api/v1/users/me');
+
+    expect(me.body).toEqual({
+      ...user, 
+      exp: expect.any(Number),
+      iat: expect.any(Number)
+    });
+  });
+
 
 });
