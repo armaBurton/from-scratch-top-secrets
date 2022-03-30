@@ -5,6 +5,7 @@ const app = require('../lib/app');
 const UserService = require('../lib/services/UserService');
 const User = require('../lib/models/User');
 const jwt = require('jsonwebtoken');
+const secrets = require('../lib/controllers/secrets');
 
 
 const dummy = {
@@ -98,20 +99,53 @@ describe('alchemy-app routes', () => {
     });
   });
   
-  it.skip('returns a list of secrets', async () => {
-    // const res = 
-  });
+  it('logged in users can view a list of secrets', async () => {
+    const agent = request.agent(app);
 
-  it.skip('returns the current user', async () => {
-    const [agent, user] = await registerAndLogin();
-    const me = await agent.get('/api/v1/users/me');
+    //No User signed in.
+    let res = await agent.get('/api/v1/secrets');
+    expect(res.status).toEqual(401);
 
-    expect(me.body).toEqual({
-      ...user, 
-      exp: expect.any(Number),
-      iat: expect.any(Number)
+    await UserService.create({
+      firstName: 'Marky',
+      lastName: 'Mark',
+      email: 'funky@bunch.boi',
+      password: 'l4dyk1ll3r'
     });
+
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({
+        email: 'funky@bunch.boi',
+        password: 'l4dyk1ll3r'
+      });
+
+    const secretsArr = [
+      {
+        title: "Mr. Roboto",
+        description: "Secret secret, I`ve got a secret, under my skin."
+      },
+      {
+        title: 'Benjamin Franklin',
+        description: 'Three may keep a secret, if two of them are dead.'
+      }
+    ];
+
+    res = await agent.get('/api/v1/secrets');
+    expect(res.body).toEqual(secretsArr);
+
   });
 
-
+  
+  
+  // it.skip('returns the current user', async () => {
+  //   const [agent, user] = await registerAndLogin();
+  //   const me = await agent.get('/api/v1/users/me');
+  
+  //   expect(me.body).toEqual({
+  //     ...user, 
+  //     exp: expect.any(Number),
+  //     iat: expect.any(Number)
+  //   });
+  // });
 });
