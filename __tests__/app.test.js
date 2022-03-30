@@ -6,6 +6,7 @@ const UserService = require('../lib/services/UserService');
 const User = require('../lib/models/User');
 const jwt = require('jsonwebtoken');
 const secrets = require('../lib/controllers/secrets');
+const { get } = require('express/lib/response');
 
 
 const dummy = {
@@ -136,6 +137,54 @@ describe('alchemy-app routes', () => {
     res = await agent.get('/api/v1/secrets');
     expect(res.body).toEqual(secretsArr);
 
+  });
+
+  it('logged in users can create new secrets', async () => {
+    const agent = request.agent(app);
+
+    //No user signed in
+    let res = await agent.get('/api/v1/secrets');
+    expect(res.status).toEqual(401);
+
+    //try to post while not signed in
+    res = await agent.post('/api/v1/secrets')
+      .send({
+        title: 'Fausto Cercignani',
+        description: 'A secret remains a secret until you make someone promise never to reveal it'
+      });
+    expect(res.body).toEqual({
+      message: 'You must be signed in to continue',
+      status: 401
+    });
+    
+    //create user
+    await UserService.create({
+      firstName: 'Lefty',
+      lastName: 'Loosie',
+      email: 'righty@tighty.dir',
+      password: 'scr3wdr1v3r'
+    });
+
+    //login user
+    res = await agent.post('/api/v1/users/sessions')
+      .send({
+        email: 'righty@tighty.dir',
+        password: 'scr3wdr1v3r' 
+      });
+
+    expect(res.body.message).toEqual('Signed in successfully!');
+
+    res = await agent.post('/api/v1/secrets')
+      .send({
+        title: 'Fausto Cercignani',
+        description: 'A secret remains a secret until you make someone promise never to reveal it'
+      });
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      title: 'Fausto Cercignani',
+      description: 'A secret remains a secret until you make someone promise never to reveal it',
+      createdAt: expect.any(String)
+    });
   });
 
 });
