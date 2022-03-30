@@ -65,9 +65,18 @@ describe('alchemy-app routes', () => {
   it.only('returns a list of secrets', async () => {
     const [agent, user] = await registerAndLogin();
 
-    let res = await agent.get('/api/v1/secrets');
-    
+    console.log(`|| user >`, user);
 
+    const res = await request(app)
+      .post('/api/v1/users/sessions')
+      .send(dummy);
+
+    const secrets = await agent.get('/api/v1/secrets');
+
+    // console.log('|| agent >', agent);
+
+    // const res = await agent.get('/api/v1/secrets');
+    
   });
 
   it('logs out a user', async () => {
